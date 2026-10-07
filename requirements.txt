@@ -1,0 +1,13 @@
+# WorldForge 运行期依赖清单
+#
+# 运行时依赖为空。core/ 与 ports/ 只用 Python 标准库，
+# adapters/ 的生产后端全部惰性导入，缺失时静默回退到零依赖默认实现。
+#
+# 安装可选后端（CPU-only 推荐组合）：
+#   pip install "worldforge-ai[vector-embed-fastembed,vector-faiss,llm-llamacpp]"
+#
+# 或从源码：
+#   pip install -e ".[dev]"
+#
+# 禁止安装：MinIO / Garage（AGPL-3.0）、TensorRT（NVIDIA 专有许可）
+# 详见 docs/decisions/ADR-0005.md

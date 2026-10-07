@@ -1,0 +1,17 @@
+{
+  "agent": {
+    "converged": 1.0,
+    "tool_calls": 1.0,
+    "tool_route_hit": 0.666667
+  },
+  "metrics": {
+    "answer_hit": 1.0,
+    "doc_hit_rate": 1.0,
+    "faithfulness": 0.496024,
+    "grounding": 0.335131,
+    "ndcg_at_5": 0.63093,
+    "recall_at_5": 1.0,
+    "reciprocal_rank": 0.5
+  },
+  "runs": 5
+}

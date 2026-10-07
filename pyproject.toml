@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "worldforge-ai"
+version = "0.1.0"
+description = "零依赖核心、可插拔后端的端到端 AI 系统：算法内核 + 混合检索 + Agent + 网关 + 评估门禁"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "晨星" }]
+keywords = ["rag", "retrieval", "agent", "attention", "evaluation", "zero-dependency"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+# 运行时依赖为空：裸 CPython 就能跑通全链路，这是本项目的硬约束
+dependencies = []
+
+[project.optional-dependencies]
+vector-embed-fastembed = ["fastembed>=0.8,<1.0", "numpy>=2.0,<3.0", "onnxruntime>=1.28,<2.0"]
+vector-embed-openai = []
+vector-faiss = ["faiss-cpu>=1.15,<2.0", "numpy>=2.0,<3.0"]
+vector-qdrant = []
+lexical-elastic = ["elasticsearch>=8.0,<10.0"]
+rerank-crossencoder = ["fastembed>=0.8,<1.0", "numpy>=2.0,<3.0"]
+llm-openai = []
+llm-ollama = []
+llm-llamacpp = ["llama-cpp-python>=0.3,<1.0"]
+docstore-postgres = ["psycopg[binary,pool]>=3.2,<4.0"]
+observe-otlp = []
+chunk-semantic = ["fastembed>=0.8,<1.0", "numpy>=2.0,<3.0"]
+tool-mcp = []
+dev = ["pytest>=8.0", "ruff>=0.6"]
+# AGPL-3.0（MinIO/Garage）与 NVIDIA 专有许可（TensorRT）严禁进入任何 extras，
+# 只能作为外部服务端点被对接。详见 docs/decisions/ADR-0005.md
+
+[project.scripts]
+worldforge-serve = "worldforge.serving.app:serve"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::RuntimeWarning"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/worldforge/core/kernels/*" = ["E741"]

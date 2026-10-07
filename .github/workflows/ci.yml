@@ -1,0 +1,58 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    name: verify py${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install (no extras)
+        run: python -m pip install --upgrade pip && python -m pip install -e ".[dev]"
+
+      - name: Lint
+        run: python -m ruff check src tests scripts
+
+      # 核心零依赖：这一阶段故意在卸载 pytest 之后用裸解释器再跑一次导入冒烟
+      - name: Bare-interpreter import smoke
+        run: |
+          python -S -c "import sys; sys.path.insert(0, 'src'); import worldforge.pipeline, worldforge.serving.app, worldforge.eval.runner; print('bare import ok')"
+
+      - name: Verify (P0 gate, tests, imports, smoke, eval gate, HTTP E2E)
+        run: python scripts/verify.py
+
+      - name: Upload verify report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-report-${{ matrix.os }}-py${{ matrix.python-version }}
+          path: verify-report.json
+          if-no-files-found: ignore
+
+  extras:
+    name: extras parity (ubuntu, py3.13)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install with vector extras
+        run: python -m pip install --upgrade pip && python -m pip install -e ".[dev]" "fastembed>=0.8,<1.0" "numpy>=2.0,<3.0" "faiss-cpu>=1.15,<2.0"
+      # 装了 extras 后必须仍然全绿：降级路径与生产路径都要被验证
+      - name: Verify with extras installed
+        run: python scripts/verify.py

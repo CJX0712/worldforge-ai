@@ -1,0 +1,35 @@
+# 可选侧车：生产向量库与本地推理服务。
+# 默认零依赖栈不需要它们；启用方式见 docs/OSS_STACK.md 第 3 节。
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.19.1
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  ollama:
+    image: ollama/ollama:0.12.3
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+
+  worldforge:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      WORLDFORGE_VECTORSTORE: qdrant
+      WORLDFORGE_VECTOR_URL: http://qdrant:6333
+      WORLDFORGE_LLM: ollama
+      WORLDFORGE_LLM_MODEL: qwen2.5:0.5b
+      WORLDFORGE_API_BASE: http://ollama:11434
+      WORLDFORGE_STRICT: "false"
+    depends_on:
+      - qdrant
+      - ollama
+
+volumes:
+  qdrant_data:
+  ollama_models:

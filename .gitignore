@@ -1,0 +1,53 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+.venv/
+venv/
+env/
+
+# --- 临时文件：根锚定，避免误伤 __init__.py ---
+/_*
+!/**/__init__.py
+*.tmp
+*.bak
+*.log
+
+# --- 测试与覆盖率 ---
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+.mypy_cache/
+verify-report.json
+
+# --- 数据 / 模型产物 ---
+data/
+models/
+*.faiss
+*.gguf
+*.onnx
+*.bin
+
+# --- 环境与密钥 ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# --- 依赖目录（pip --target 产物） ---
+_deps/
+_pipprobe/
+
+# --- 编辑器 / 系统 ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- 交付物门禁 ---
+!.github/workflows/

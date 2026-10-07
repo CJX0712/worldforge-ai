@@ -1,0 +1,13 @@
+# 核心运行时依赖为空：裸 CPython 3.11+ 即可跑通全部功能与验证。
+# 本文件只钉开发与测试工具链，版本按 2026-10 实测可用组合锁定。
+pytest==9.1.1
+ruff==0.16.8
+
+# --- 可选后端（按需安装，不装则自动回退默认实现）---
+# CPU-only 完整栈基线：
+# fastembed==0.8.0
+# onnxruntime==1.28.0
+# faiss-cpu==1.15.0
+# llama-cpp-python>=0.3
+#
+# 明确禁止进入本清单：MinIO / Garage（AGPL-3.0）、TensorRT（NVIDIA 专有许可）
