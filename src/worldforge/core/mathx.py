@@ -22,7 +22,7 @@ def dot(left: Sequence[float], right: Sequence[float]) -> float:
 
     if len(left) != len(right):
         raise ValueError("向量长度必须相同")
-    return float(math.fsum(float(a) * float(b) for a, b in zip(left, right)))
+    return float(math.fsum(float(a) * float(b) for a, b in zip(left, right, strict=False)))
 
 
 def l2_norm(vector: Sequence[float]) -> float:

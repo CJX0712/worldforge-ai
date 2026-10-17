@@ -28,7 +28,7 @@ def _case(seed, Nq=9, Nk=17, d=5, dv=4):
 
 
 def _max_diff(a, b):
-    return max(abs(x - y) for ra, rb in zip(a, b) for x, y in zip(ra, rb))
+    return max(abs(x - y) for ra, rb in zip(a, b, strict=False) for x, y in zip(ra, rb, strict=False))
 
 
 def test_I1_tiled_equals_naive():
@@ -47,7 +47,7 @@ def test_I2_lse_equivalence():
     _, Ln = attention_naive(Q, K, V)
     for Br, Bc in BLOCK_CASES:
         _, Lt = attention_tiled(Q, K, V, Br=Br, Bc=Bc)
-        err = max(abs(a - b) for a, b in zip(Lt, Ln))
+        err = max(abs(a - b) for a, b in zip(Lt, Ln, strict=False))
         assert err < LSE_TOL, (Br, Bc, err)
 
 
@@ -175,7 +175,7 @@ def test_masked_tiled_matches_naive():
     for Br, Bc in ((1, 1), (3, 7), (4, 8), (16, 16), (64, 64)):
         Ot, Lt = attention_tiled(Q, K, V, mask=mask, Br=Br, Bc=Bc)
         assert _max_diff(Ot, On) < EQ_TOL, (Br, Bc)
-        assert max(abs(a - b) for a, b in zip(Lt, Ln)) < LSE_TOL, (Br, Bc)
+        assert max(abs(a - b) for a, b in zip(Lt, Ln, strict=False)) < LSE_TOL, (Br, Bc)
 
 
 def test_causal_tiled_matches_naive():
@@ -185,7 +185,7 @@ def test_causal_tiled_matches_naive():
     for Br, Bc in ((1, 1), (2, 5), (7, 13), (16, 16)):
         Ot, Lt = attention_tiled(Q, K, V, causal=True, Br=Br, Bc=Bc)
         assert _max_diff(Ot, On) < EQ_TOL, (Br, Bc)
-        assert max(abs(a - b) for a, b in zip(Lt, Ln)) < LSE_TOL, (Br, Bc)
+        assert max(abs(a - b) for a, b in zip(Lt, Ln, strict=False)) < LSE_TOL, (Br, Bc)
 
 
 def test_invalid_block_size_rejected():

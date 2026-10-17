@@ -98,7 +98,7 @@ def test_I7_gibbs_inequality():
 def test_I8_mutual_information_nonnegative():
     """I8 I(X;Y) >= -1e-15。"""
     rng = PCG32(12000)
-    for s in range(30):
+    for _s in range(30):
         joint = [[rng.next_float() + 0.01 for _ in range(4)] for _ in range(3)]
         assert mutual_information(joint) >= -KL_TOL
 
@@ -126,7 +126,7 @@ def test_I11_wasserstein_two_point_masses():
 
 def test_I12_wasserstein_is_a_metric():
     """I12 W1 度量性质：非负、自反为 0、对称、三角不等式。"""
-    rng = PCG32(16000)
+    PCG32(16000)
     triples = []
     for _ in range(20):
         def make(seed_shift):

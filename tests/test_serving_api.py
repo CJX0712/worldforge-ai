@@ -13,7 +13,7 @@ import pytest
 from worldforge.config import Config
 from worldforge.serving.app import build_server
 from worldforge.serving.errors import status_for
-from worldforge.serving.routes import MethodNotAllowed, Request, Router
+from worldforge.serving.routes import MethodNotAllowed, Router
 
 
 @pytest.fixture(scope="module")

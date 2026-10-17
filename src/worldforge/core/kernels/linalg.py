@@ -59,7 +59,7 @@ class NotPositiveDefiniteError(ValueError):
     """
 
     def __init__(self, j: int, d: float):
-        super().__init__("not positive definite at column %d: pivot=%r" % (j, d))
+        super().__init__(f"not positive definite at column {j}: pivot={d!r}")
         self.j = j
         self.d = d
 
@@ -77,7 +77,7 @@ def matvec(A, x):
 
     不变量：A 为 (n,m)、x 为 (m,) 时输出长度 n；m == 0 时输出全 0。
     """
-    return [math.fsum(a * b for a, b in zip(row, x)) for row in A]
+    return [math.fsum(a * b for a, b in zip(row, x, strict=False)) for row in A]
 
 
 def matmul(A, B):
@@ -88,7 +88,7 @@ def matmul(A, B):
     if not B:
         return [[] for _ in A]
     Bt = transpose(B)
-    return [[math.fsum(a * b for a, b in zip(row, col)) for col in Bt] for row in A]
+    return [[math.fsum(a * b for a, b in zip(row, col, strict=False)) for col in Bt] for row in A]
 
 
 def transpose(A):
@@ -158,7 +158,7 @@ def _jacobi_rotate(A, V, p, q, c, s, n):
     A[p][q] = 0.0
     A[q][p] = 0.0
     for k in range(n):
-        if k == p or k == q:
+        if k in (p, q):
             continue
         akp = A[p][k]
         akq = A[q][k]
@@ -250,7 +250,7 @@ def power_iteration(A, iters: int = 1000, tol: float = 1e-12):
     n = len(A)
     v = _start_vector(n)
     for _ in range(iters):
-        w = [math.fsum(a * b for a, b in zip(row, v)) for row in A]
+        w = [math.fsum(a * b for a, b in zip(row, v, strict=False)) for row in A]
         nw = math.sqrt(math.fsum(t * t for t in w))
         if nw < EPS:
             raise DegenerateMatrixError("A v collapsed to zero")
@@ -261,7 +261,7 @@ def power_iteration(A, iters: int = 1000, tol: float = 1e-12):
         v = nv
         if min(df, db) < tol:
             break
-    lam = math.fsum(v[i] * math.fsum(a * b for a, b in zip(A[i], v)) for i in range(n))
+    lam = math.fsum(v[i] * math.fsum(a * b for a, b in zip(A[i], v, strict=False)) for i in range(n))
     k = max(range(n), key=lambda i: abs(v[i]))
     if v[k] < 0.0:
         v = [-t for t in v]
@@ -280,7 +280,7 @@ def solve(A, b):
     for k in range(n):
         piv = max(range(k, n), key=lambda i: abs(M[i][k]))
         if abs(M[piv][k]) < EPS:
-            raise SingularMatrixError("zero pivot at column %d" % k)
+            raise SingularMatrixError(f"zero pivot at column {k}")
         if piv != k:
             M[k], M[piv] = M[piv], M[k]
         for i in range(k + 1, n):
@@ -346,7 +346,7 @@ def gram_schmidt(A):
                     cols[k][i] -= d * cols[j][i]
         nrm = math.sqrt(math.fsum(v * v for v in cols[k]))
         if nrm < EPS:
-            raise DegenerateMatrixError("linearly dependent column %d" % k)
+            raise DegenerateMatrixError(f"linearly dependent column {k}")
         R[k][k] = nrm
         for i in range(n):
             cols[k][i] /= nrm

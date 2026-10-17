@@ -6,8 +6,9 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
-from typing import Any, Iterator, Mapping
+from typing import Any
 
 from worldforge.core.seeding import deterministic_view
 

@@ -5,8 +5,6 @@
 
 from __future__ import annotations
 
-from typing import Sequence
-
 from worldforge.adapters.chunker_recursive import RecursiveCharChunker
 from worldforge.errors import BackendUnavailable
 from worldforge.types import Chunk, Document
@@ -41,15 +39,15 @@ class SemanticChunker:
         cuts = [0]
         for i in range(1, len(sentences)):
             # 语义距离出现局部极大即视为边界，跳过边界句避免切得过碎
-            distance = 1.0 - sum(a * b for a, b in zip(vectors[i - 1], vectors[i]))
-            previous = 1.0 - sum(a * b for a, b in zip(vectors[i - 2], vectors[i - 1])) if i >= 2 else -1.0
+            distance = 1.0 - sum(a * b for a, b in zip(vectors[i - 1], vectors[i], strict=False))
+            previous = 1.0 - sum(a * b for a, b in zip(vectors[i - 2], vectors[i - 1], strict=False)) if i >= 2 else -1.0
             if distance > previous and distance > 0.15:
                 cuts.append(i)
         cuts.append(len(sentences))
 
         out: list[Chunk] = []
         ordinal = 0
-        for start, end in zip(cuts, cuts[1:]):
+        for start, end in zip(cuts, cuts[1:], strict=False):
             body = "。".join(s.strip() for s in sentences[start:end]) + "。"
             if not body.strip():
                 continue

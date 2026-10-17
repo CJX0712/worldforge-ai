@@ -79,7 +79,7 @@ def test_I5_count_conservation():
     E, B, d = 4, 24, 5
     x = [[rng.gauss() for _ in range(d)] for _ in range(B)]
     Wg = [[rng.gauss() for _ in range(d)] for _ in range(E)]
-    experts = [(lambda i: (lambda v: [c * (1.0 + i) for c in v]))(i) for i in range(E)]
+    experts = [lambda v, _i=i: [c * (1.0 + _i) for c in v] for i in range(E)]
     for k in (1, 2, 3):
         for cf in (0.25, 0.5, 1.0, 2.0):
             _, _, st = moe_forward(x, experts, Wg, k=k, capacity_factor=cf)

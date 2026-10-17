@@ -11,10 +11,10 @@ import pytest
 
 np = pytest.importorskip("numpy")
 
-from worldforge.core import accel
-from worldforge.core.mathx import cosine_similarity as python_cosine
-from worldforge.core.mathx import dot as python_dot
-from worldforge.core.mathx import l2_normalize as python_normalize
+from worldforge.core import accel  # noqa: E402
+from worldforge.core.mathx import cosine_similarity as python_cosine  # noqa: E402
+from worldforge.core.mathx import dot as python_dot  # noqa: E402
+from worldforge.core.mathx import l2_normalize as python_normalize  # noqa: E402
 
 
 def test_accelerated_path_matches_python_for_random_vectors() -> None:

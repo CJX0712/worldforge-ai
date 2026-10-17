@@ -119,9 +119,9 @@ def ppo_clip_loss(logp, logp_old, adv, eps: float = 0.2):
     """
     if len(logp) == 0:
         return [], [], 0.0
-    ratios = [safe_exp(a - b) for a, b in zip(logp, logp_old)]
+    ratios = [safe_exp(a - b) for a, b in zip(logp, logp_old, strict=False)]
     loss = []
-    for r, a in zip(ratios, adv):
+    for r, a in zip(ratios, adv, strict=False):
         rc = min(max(r, 1.0 - eps), 1.0 + eps)
         loss.append(min(r * a, rc * a))
     clip_frac = sum(1 for r in ratios if abs(r - 1.0) > eps) / len(ratios)
@@ -136,7 +136,7 @@ def value_clip_loss(v, v_old, v_targ, eps: float = 0.2):
         I12 loss >= (v - v_targ)^2 - 1e-12（取 max 保证悲观）
     """
     res = []
-    for a, b, t in zip(v, v_old, v_targ):
+    for a, b, t in zip(v, v_old, v_targ, strict=False):
         d = a - b
         vc = b + min(max(d, -eps), eps)
         res.append(max((a - t) ** 2, (vc - t) ** 2))

@@ -51,7 +51,7 @@ def bm25_scores(
     }
 
     scores: list[float] = []
-    for frequency, length in zip(frequencies, lengths):
+    for frequency, length in zip(frequencies, lengths, strict=False):
         score_terms: list[float] = []
         length_ratio = length / average_length if average_length else 0.0
         for token in query_tokens:

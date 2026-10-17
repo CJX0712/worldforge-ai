@@ -11,7 +11,7 @@ import json
 import os
 import urllib.error
 import urllib.request
-from typing import Sequence
+from collections.abc import Sequence
 
 from worldforge.core.mathx import l2_normalize
 from worldforge.errors import BackendUnavailable

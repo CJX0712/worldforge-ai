@@ -7,14 +7,14 @@ doc_id 重复、先前用例的写入污染后续检索，指标忽高忽低且�
 from __future__ import annotations
 
 import json
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any
 
 from worldforge.eval.metrics import (
     aggregate,
     doc_hit_rate,
-    lexical_faithfulness,
     ndcg_at_k,
     recall_at_k,
     reciprocal_rank,

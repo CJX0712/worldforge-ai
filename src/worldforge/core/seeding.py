@@ -9,9 +9,9 @@ import json
 import math
 import os
 import random
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import fields, is_dataclass
-from typing import Any, Callable
+from typing import Any
 
 _EXCLUDE_KEYS = frozenset(
     {

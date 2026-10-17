@@ -7,8 +7,8 @@ CPU-only 环境里唯一能真跑大模型的路径，因此是本仓库推荐�
 
 from __future__ import annotations
 
+from collections.abc import Iterator, Sequence
 from pathlib import Path
-from typing import Iterator, Sequence
 
 from worldforge.errors import BackendUnavailable, LLMError
 from worldforge.types import Completion, Message

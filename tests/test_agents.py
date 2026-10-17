@@ -4,7 +4,13 @@ from __future__ import annotations
 
 import pytest
 
-from worldforge.agents.builtin_tools import CalculatorTool, DictionaryTool, EchoTool, detect_arithmetic, normalize_expression
+from worldforge.agents.builtin_tools import (
+    CalculatorTool,
+    DictionaryTool,
+    EchoTool,
+    detect_arithmetic,
+    normalize_expression,
+)
 from worldforge.agents.planner_rule import RuleBasedPlanner, topological_sort
 from worldforge.agents.react import parse_final
 from worldforge.agents.tools import ToolRegistry

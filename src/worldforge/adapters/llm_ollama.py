@@ -8,7 +8,7 @@ from __future__ import annotations
 import json
 import urllib.error
 import urllib.request
-from typing import Iterator, Sequence
+from collections.abc import Iterator, Sequence
 
 from worldforge.errors import LLMError
 from worldforge.types import Completion, Message

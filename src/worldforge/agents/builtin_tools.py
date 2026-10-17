@@ -7,7 +7,8 @@ from __future__ import annotations
 
 import ast
 import re
-from typing import Any, Mapping
+from collections.abc import Mapping
+from typing import Any
 
 from worldforge.core.safe_eval import safe_eval
 from worldforge.core.tokenizer import normalize_text
@@ -33,7 +34,7 @@ def map_fullwidth(text: str) -> str:
 def normalize_expression(text: str) -> str:
     """归一化全角数字与运算符；裁剪集绝不能含 `+ - * /`，否则会切坏合法算式。"""
 
-    trimmed = map_fullwidth(text).strip(" \t\r\n?!,;:?=,;")
+    trimmed = re.sub(r"^[\s?!,;:?=]+|[\s?!,;:?=]+$", "", map_fullwidth(text))
     return trimmed if all(ch in _EXPRESSION_CHARS for ch in trimmed) else ""
 
 

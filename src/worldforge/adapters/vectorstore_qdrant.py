@@ -8,8 +8,9 @@ from __future__ import annotations
 import json
 import urllib.error
 import urllib.request
-from typing import Any, Mapping, Sequence
-from uuid import uuid5, NAMESPACE_URL
+from collections.abc import Mapping, Sequence
+from typing import Any
+from uuid import NAMESPACE_URL, uuid5
 
 from worldforge.adapters.vectorstore_memory import InMemoryExactIndex
 from worldforge.errors import BackendUnavailable, DimensionMismatch
@@ -59,7 +60,7 @@ class QdrantStore(InMemoryExactIndex):
             self._validate_vector(vector)
         points = [
             {"id": _point_id(cid), "vector": list(map(float, v)), "payload": {**dict(m), "chunk_id": cid}}
-            for cid, v, m in zip(ids, vectors, metas)
+            for cid, v, m in zip(ids, vectors, metas, strict=False)
         ]
         body = json.dumps({"points": points}).encode("utf-8")
         request = urllib.request.Request(

@@ -11,8 +11,8 @@ import pytest
 from worldforge.core.kernels.numeric import ATOL_STRICT, softmax
 from worldforge.core.kernels.prob import entropy, normalize
 from worldforge.core.kernels.sampling import (
-    InvalidNucleusProbError,
     PCG32,
+    InvalidNucleusProbError,
     TemperatureZeroError,
     apply_temperature,
     beam_search,
@@ -75,7 +75,7 @@ def test_I4_temperature_monotonic_entropy():
         z = _logits(MASTER_SEED + s)
         ts = [0.05, 0.2, 0.5, 1.0, 2.0, 5.0]
         hs = [entropy(softmax(apply_temperature(z, t))) for t in ts]
-        for a, b in zip(hs, hs[1:]):
+        for a, b in zip(hs, hs[1:], strict=False):
             assert a <= b + 1e-9, (ts, hs)
 
 
@@ -104,7 +104,7 @@ def test_I7_beam_scores_descending():
 
     beams = beam_search(step, B=3, max_len=4, eos_id=99)
     assert len(beams) <= 3
-    for a, b in zip(beams, beams[1:]):
+    for a, b in zip(beams, beams[1:], strict=False):
         assert a[0] >= b[0]
 
 
@@ -117,7 +117,7 @@ def test_I8_beam_width_one_is_greedy():
     max_len = 5
     beams = beam_search(step, B=1, max_len=max_len, eos_id=99)
     greedy = []
-    for t in range(max_len):
+    for _t in range(max_len):
         lp = step(greedy)
         greedy.append(max(range(4), key=lambda v: (lp[v], -v)))
     assert beams[0][1] == greedy

@@ -47,7 +47,7 @@ def test_I2_lambda_one_is_mc_return_minus_baseline():
     adv, _ = compute_gae(r, v, dones, gamma=GAMMA, lam=1.0)
     T = len(r)
     for t in range(T):
-        ret = math.fsum(GAMMA ** l * r[t + l] for l in range(T - t)) + GAMMA ** (T - t) * v[T]
+        ret = math.fsum(GAMMA ** ell * r[t + ell] for ell in range(T - t)) + GAMMA ** (T - t) * v[T]
         assert abs((adv[t] + v[t]) - ret) < 1e-10
 
 
@@ -104,8 +104,8 @@ def test_I7_ratio_one_gives_advantage():
     logp = [rng.gauss() for _ in range(20)]
     adv = [rng.gauss() * 2.0 for _ in range(20)]
     loss, ratios, clip_frac = ppo_clip_loss(logp, logp, adv)
-    for l, a in zip(loss, adv):
-        assert abs(l - a) < ATOL_STRICT
+    for ell, a in zip(loss, adv, strict=False):
+        assert abs(ell - a) < ATOL_STRICT
     for r in ratios:
         assert abs(r - 1.0) < ATOL_STRICT
     assert clip_frac == 0.0
@@ -133,8 +133,8 @@ def test_I9_pessimistic_lower_bound():
         logp_old = [rng.gauss() * 1.5 for _ in range(8)]
         adv = [rng.gauss() * 3.0 for _ in range(8)]
         loss, ratios, _ = ppo_clip_loss(logp, logp_old, adv, eps=EPS)
-        for l, r, a in zip(loss, ratios, adv):
-            assert l <= r * a + 1e-12
+        for ell, r, a in zip(loss, ratios, adv, strict=False):
+            assert ell <= r * a + 1e-12
 
 
 def test_I10_ratio_identity():
@@ -143,7 +143,7 @@ def test_I10_ratio_identity():
     logp = [rng.gauss() for _ in range(20)]
     logp_old = [rng.gauss() for _ in range(20)]
     _, ratios, _ = ppo_clip_loss(logp, logp_old, [0.0] * 20)
-    for r, a, b in zip(ratios, logp, logp_old):
+    for r, a, b in zip(ratios, logp, logp_old, strict=False):
         assert abs(r - math.exp(a - b)) < 1e-12
         assert abs(r - (math.exp(a) / math.exp(b))) < 1e-12
 
@@ -155,8 +155,8 @@ def test_I11_value_clip_no_op_within_eps():
     v = [a + EPS * 0.5 for a in v_old]
     v_targ = [rng.gauss() for _ in range(20)]
     loss = value_clip_loss(v, v_old, v_targ, eps=EPS)
-    for l, a, t in zip(loss, v, v_targ):
-        assert abs(l - (a - t) ** 2) < ATOL_STRICT
+    for ell, a, t in zip(loss, v, v_targ, strict=False):
+        assert abs(ell - (a - t) ** 2) < ATOL_STRICT
 
 
 def test_I12_value_clip_pessimistic():
@@ -167,8 +167,8 @@ def test_I12_value_clip_pessimistic():
         v = [a + rng.gauss() for a in v_old]
         v_targ = [rng.gauss() for _ in range(8)]
         loss = value_clip_loss(v, v_old, v_targ, eps=EPS)
-        for l, a, t in zip(loss, v, v_targ):
-            assert l >= (a - t) ** 2 - 1e-12
+        for ell, a, t in zip(loss, v, v_targ, strict=False):
+            assert ell >= (a - t) ** 2 - 1e-12
 
 
 def test_I13_entropy_range():

@@ -9,7 +9,8 @@ import json
 import urllib.error
 import urllib.parse
 import urllib.request
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 from worldforge.adapters.lexical_bm25 import BM25Index
 from worldforge.errors import BackendUnavailable

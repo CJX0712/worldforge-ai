@@ -25,7 +25,7 @@ def pearson(left: Sequence[float], right: Sequence[float]) -> float:
     right_ss = math.fsum(value * value for value in right_centered)
     if left_ss == 0.0 or right_ss == 0.0:
         return 0.0
-    numerator = math.fsum(a * b for a, b in zip(left_centered, right_centered))
+    numerator = math.fsum(a * b for a, b in zip(left_centered, right_centered, strict=False))
     correlation = numerator / math.sqrt(left_ss * right_ss)
     return max(-1.0, min(1.0, float(correlation)))
 

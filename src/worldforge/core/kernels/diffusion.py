@@ -108,7 +108,7 @@ def q_sample(x0, t: int, alpha_bars, eps):
     ab = max(alpha_bars[t], 1e-8)
     c0 = math.sqrt(ab)
     c1 = math.sqrt(max(1.0 - ab, 0.0))
-    return [c0 * a + c1 * b for a, b in zip(x0, eps)]
+    return [c0 * a + c1 * b for a, b in zip(x0, eps, strict=False)]
 
 
 def predict_x0(xt, t: int, alpha_bars, eps_theta):
@@ -119,7 +119,7 @@ def predict_x0(xt, t: int, alpha_bars, eps_theta):
     ab = max(alpha_bars[t], 1e-8)
     c0 = math.sqrt(ab)
     c1 = math.sqrt(max(1.0 - ab, 0.0))
-    return [(x - c1 * e) / c0 for x, e in zip(xt, eps_theta)]
+    return [(x - c1 * e) / c0 for x, e in zip(xt, eps_theta, strict=False)]
 
 
 def _sigma_ddim(ab_t: float, ab_p: float, eta: float) -> float:
@@ -152,9 +152,9 @@ def ddim_step(xt, t: int, t_prev: int, alpha_bars, eps_theta, eta: float, rng):
     coef = math.sqrt(max(1.0 - ab_p - sigma * sigma, 0.0))
     c0 = math.sqrt(ab_p)
     if sigma > 0.0:
-        return [c0 * a + coef * b + sigma * rng.gauss() for a, b in zip(x0h, eps_theta)]
+        return [c0 * a + coef * b + sigma * rng.gauss() for a, b in zip(x0h, eps_theta, strict=False)]
     # sigma == 0 时绝不调用 rng，保证随机流干净（I6）。
-    return [c0 * a + coef * b for a, b in zip(x0h, eps_theta)]
+    return [c0 * a + coef * b for a, b in zip(x0h, eps_theta, strict=False)]
 
 
 def ddpm_step(xt, t: int, t_prev: int, alpha_bars, betas, eps_theta, rng,
@@ -174,14 +174,11 @@ def ddpm_step(xt, t: int, t_prev: int, alpha_bars, betas, eps_theta, rng,
     x0h = predict_x0(xt, t, alpha_bars, eps_theta)
     if t_prev < 0:
         return list(x0h)
-    if variance == "tilde":
-        sigma2 = beta_t * (1.0 - ab_p) / max(1.0 - ab_t, 1e-12)
-    else:
-        sigma2 = beta_t
+    sigma2 = beta_t * (1.0 - ab_p) / max(1.0 - ab_t, 1e-12) if variance == "tilde" else beta_t
     sigma = math.sqrt(max(sigma2, 0.0))
     inv = 1.0 / math.sqrt(alpha_t)
     denom = math.sqrt(max(1.0 - ab_t, 0.0)) or 1e-12
-    mu = [inv * (x - (beta_t / denom) * e) for x, e in zip(xt, eps_theta)]
+    mu = [inv * (x - (beta_t / denom) * e) for x, e in zip(xt, eps_theta, strict=False)]
     if sigma > 0.0:
         return [a + sigma * rng.gauss() for a in mu]
     return mu

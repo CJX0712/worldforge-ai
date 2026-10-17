@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import math
 from collections.abc import Mapping, Sequence
+from typing import Any
 
 from worldforge.core import accel
 from worldforge.core.mathx import cosine_similarity, dot, l2_norm
@@ -47,10 +48,10 @@ class InMemoryExactIndex:
     ) -> int:
         if not (len(ids) == len(vectors) == len(metas)):
             raise ValueError("ids、vectors、metas 长度必须相等")
-        for chunk_id, vector in zip(ids, vectors):
+        for chunk_id, vector in zip(ids, vectors, strict=False):
             self._validate_vector(vector)
             self._vectors[chunk_id] = [float(value) for value in vector]
-        for chunk_id, meta in zip(ids, metas):
+        for chunk_id, meta in zip(ids, metas, strict=False):
             self._metas[chunk_id] = dict(meta)
         return len(ids)
 
@@ -86,7 +87,7 @@ class InMemoryExactIndex:
         else:
             scores = [cosine_similarity(vector, row) for row in matrix]
         hits: list[Hit] = []
-        for chunk_id, score in zip(ordered_ids, scores):
+        for chunk_id, score in zip(ordered_ids, scores, strict=False):
             meta = self._metas.get(chunk_id, {})
             if where and not _matches(meta, where):
                 continue
@@ -112,7 +113,7 @@ class InMemoryExactIndex:
 
     def load(self, path: str) -> None:
         try:
-            with open(path, "r", encoding="utf-8") as handle:
+            with open(path, encoding="utf-8") as handle:
                 payload = json.load(handle)
         except (OSError, ValueError) as exc:
             raise VectorStoreError(f"索引文件无法读取: {exc}") from exc

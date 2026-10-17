@@ -6,7 +6,8 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 from worldforge.errors import BackendUnavailable
 from worldforge.types import Chunk, Document

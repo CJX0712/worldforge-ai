@@ -7,8 +7,8 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "src"))
 
 from worldforge.core.kernels.diffusion import (
-    ddpm_step,
     ddim_step,
+    ddpm_step,
     get_cosine_schedule,
     get_linear_schedule,
     predict_x0,
@@ -31,7 +31,7 @@ def test_I1_true_noise_reconstructs_x0():
         eps = [rng.gauss() for _ in range(3)]
         xt = q_sample(x0, t, ab, eps)
         x0h = predict_x0(xt, t, ab, eps)
-        err = max(abs(a - b) for a, b in zip(x0h, x0))
+        err = max(abs(a - b) for a, b in zip(x0h, x0, strict=False))
         assert err < 1e-10, (t, err)
 
 
@@ -108,10 +108,10 @@ def test_I7_ddim_final_step_equals_x0_hat():
     eps = [0.5, 0.7, -0.2]
     out = ddim_step(xt, 500, -1, ab, eps, 0.5, PCG32(3))
     x0h = predict_x0(xt, 500, ab, eps)
-    for a, b in zip(out, x0h):
+    for a, b in zip(out, x0h, strict=False):
         assert abs(a - b) < ATOL_STRICT
     out2 = ddpm_step(xt, 500, -1, ab, get_cosine_schedule(T)[0], eps, PCG32(3))
-    for a, b in zip(out2, x0h):
+    for a, b in zip(out2, x0h, strict=False):
         assert abs(a - b) < ATOL_STRICT
 
 
@@ -156,7 +156,7 @@ def test_I9_x0_hat_independent_of_step_count():
     for t in (1000 - 1, 700, 300, 50, 1):
         eps = [rng.gauss() for _ in range(2)]
         xt = q_sample(x0, t, ab, eps)
-        err = max(abs(a - b) for a, b in zip(predict_x0(xt, t, ab, eps), x0))
+        err = max(abs(a - b) for a, b in zip(predict_x0(xt, t, ab, eps), x0, strict=False))
         assert err < 1e-10, (t, err)
 
 
@@ -199,9 +199,9 @@ def test_oracle_reverse_chain_recovers_x0():
         ab_t = max(ab[t], 1e-8)
         c0 = math.sqrt(ab_t)
         c1 = math.sqrt(max(1.0 - ab_t, 0.0))
-        eps_t = [(v - c0 * x0i) / c1 for v, x0i in zip(cur, x)]
+        eps_t = [(v - c0 * x0i) / c1 for v, x0i in zip(cur, x, strict=False)]
         cur = ddim_step(cur, t, t - 1, ab, eps_t, 0.0, rng)
-    err = max(abs(a - b) for a, b in zip(cur, x))
+    err = max(abs(a - b) for a, b in zip(cur, x, strict=False))
     assert err < 1e-6, err
 
 

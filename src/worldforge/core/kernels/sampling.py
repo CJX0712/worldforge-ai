@@ -32,7 +32,7 @@
 
 import math
 
-from .numeric import softmax, safe_log
+from .numeric import safe_log, softmax
 from .prob import normalize
 
 __all__ = [
@@ -129,7 +129,7 @@ def apply_temperature(logits, T: float):
     不变量：I6 T == 1.0 时逐位不变；T <= 0 抛 TemperatureZeroError。
     """
     if T <= 0.0:
-        raise TemperatureZeroError("temperature must be > 0, got %r" % (T,))
+        raise TemperatureZeroError(f"temperature must be > 0, got {T!r}")
     return [z / T for z in logits]
 
 

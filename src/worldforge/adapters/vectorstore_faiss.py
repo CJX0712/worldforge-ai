@@ -6,8 +6,9 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any
 
 from worldforge.adapters.vectorstore_memory import InMemoryExactIndex
 from worldforge.errors import BackendUnavailable, DimensionMismatch
@@ -41,8 +42,8 @@ class FaissStore(InMemoryExactIndex):
         payload = [list(map(float, v)) for v in vectors]
         self._index.add(payload)
         self._ids.extend(ids)
-        self._vectors.update({cid: list(map(float, v)) for cid, v in zip(ids, vectors)})
-        self._metas.update({cid: dict(m) for cid, m in zip(ids, metas)})
+        self._vectors.update({cid: list(map(float, v)) for cid, v in zip(ids, vectors, strict=False)})
+        self._metas.update({cid: dict(m) for cid, m in zip(ids, metas, strict=False)})
         return len(ids)
 
     def count(self) -> int:

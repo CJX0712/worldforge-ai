@@ -49,7 +49,7 @@ def test_I2_shift_invariance():
         base = softmax(x)
         for c in (1e3, -1e3):
             shifted = softmax([v + c for v in x])
-            err = max(abs(a - b) for a, b in zip(shifted, base))
+            err = max(abs(a - b) for a, b in zip(shifted, base, strict=False))
             assert err < ATOL_STRICT, (x, c, err)
 
 
@@ -62,7 +62,7 @@ def test_I2b_large_shift_ulp_limit():
     for x in SEED_CASES:
         base = softmax(x)
         shifted = softmax([v + 1e6 for v in x])
-        err = max(abs(a - b) for a, b in zip(shifted, base))
+        err = max(abs(a - b) for a, b in zip(shifted, base, strict=False))
         assert err < 1e-10, (x, err)
     for x in ([1.0, 2.0, 3.0, 4.0], [0.0, 0.0, 0.0], [-5.0, 0.0, 5.0]):
         assert softmax(x) == softmax([v + 1e6 for v in x])
@@ -88,7 +88,7 @@ def test_I4_log_softmax_consistency():
     for x in I4_CASES:
         p = softmax(x)
         ls = log_softmax(x)
-        err = max(abs(math.log(a) - b) for a, b in zip(p, ls))
+        err = max(abs(math.log(a) - b) for a, b in zip(p, ls, strict=False))
         assert err < ATOL_STRICT, (x, err)
 
 

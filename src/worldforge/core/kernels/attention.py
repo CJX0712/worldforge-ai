@@ -64,9 +64,7 @@ def _masked(mask, causal, i, j) -> bool:
     """
     if causal and j > i:
         return True
-    if mask is not None and not mask[i][j]:
-        return True
-    return False
+    return bool(mask is not None and not mask[i][j])
 
 
 def attention_naive(Q, K, V, mask=None, scale=None, causal: bool = False):

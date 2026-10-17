@@ -5,8 +5,6 @@
 
 from __future__ import annotations
 
-from typing import Sequence
-
 from worldforge.types import Chunk, Document
 
 _SEPARATORS: tuple[str, ...] = ("\n\n", "\n", "。", "！", "？", ". ", "! ", "? ", " ")

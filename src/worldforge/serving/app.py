@@ -8,8 +8,9 @@ from __future__ import annotations
 
 import json
 import sys
+from collections.abc import Callable
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from typing import Any, Callable
+from typing import Any
 
 from worldforge.config import Config
 from worldforge.serving.errors import error_body

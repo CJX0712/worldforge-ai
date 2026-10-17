@@ -86,7 +86,7 @@ def cosine_scores(query: Sequence[float], matrix: Sequence[Sequence[float]]) -> 
     products = matrix_array @ query_array
     return [
         0.0 if float(norm) == 0.0 else float(product / (norm * query_norm))
-        for product, norm in zip(products, row_norms)
+        for product, norm in zip(products, row_norms, strict=False)
     ]
 
 

@@ -51,7 +51,7 @@
 import math
 
 from .linalg import matvec
-from .numeric import softmax, safe_exp
+from .numeric import safe_exp, softmax
 
 __all__ = [
     "route_topk",
@@ -149,7 +149,7 @@ def moe_forward(x, experts, W_g, k: int = 2, capacity_factor: float = 1.25,
         idx, gates = route_topk(h, k)
         for i in range(E):
             psum[i] += p[i]
-        for ei, g in zip(idx, gates):
+        for ei, g in zip(idx, gates, strict=False):
             # 顺序不可交换：先判定再计数，否则 dropped 与 freq 对不上。
             if freq[ei] >= capacity:
                 dropped += 1
@@ -158,8 +158,5 @@ def moe_forward(x, experts, W_g, k: int = 2, capacity_factor: float = 1.25,
             out = experts[ei](x[b])
             for c in range(d_aux):
                 y[b][c] += g * out[c]
-    if training and B:
-        aux = load_balance_loss(freq, [v / B for v in psum], alpha)
-    else:
-        aux = 0.0
+    aux = load_balance_loss(freq, [v / B for v in psum], alpha) if training and B else 0.0
     return y, aux, {"freq": freq, "capacity": capacity, "dropped": dropped}

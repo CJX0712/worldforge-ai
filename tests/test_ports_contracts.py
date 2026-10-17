@@ -7,9 +7,6 @@ from __future__ import annotations
 
 import pytest
 
-from worldforge.config import Config
-from worldforge.errors import ConfigError
-from worldforge.ports import Chunker, DocStore, Embedder, LexicalIndex, LLM, Observer, Planner, Reranker, Tool, VectorStore
 from tests.fakes import (
     FakeChunker,
     FakeDocStore,
@@ -21,6 +18,20 @@ from tests.fakes import (
     FakeTool,
     FakeVectorStore,
     RecordingObserver,
+)
+from worldforge.config import Config
+from worldforge.errors import ConfigError
+from worldforge.ports import (
+    LLM,
+    Chunker,
+    DocStore,
+    Embedder,
+    LexicalIndex,
+    Observer,
+    Planner,
+    Reranker,
+    Tool,
+    VectorStore,
 )
 
 

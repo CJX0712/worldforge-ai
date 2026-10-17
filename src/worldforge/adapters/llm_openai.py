@@ -9,7 +9,7 @@ import json
 import os
 import urllib.error
 import urllib.request
-from typing import Iterator, Sequence
+from collections.abc import Iterator, Sequence
 
 from worldforge.errors import BackendUnavailable, LLMError
 from worldforge.types import Completion, Message

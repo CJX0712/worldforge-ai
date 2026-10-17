@@ -5,9 +5,10 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Any, Iterator, Mapping, Sequence
+from typing import Any
 
 from worldforge.core.hash_embed import hash_embed
 from worldforge.types import Chunk, Completion, Document, Hit, Message, Plan, Step, ToolContext, ToolResult, ToolSpec

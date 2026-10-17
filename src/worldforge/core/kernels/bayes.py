@@ -103,7 +103,7 @@ def beta_binomial_update(a: float, b: float, k: int, n: int):
     不变量：I7 a_post + b_post == a + b + n（整数精确相等）。
     """
     if not (0 <= k <= n):
-        raise ValueError("require 0 <= k <= n, got k=%r n=%r" % (k, n))
+        raise ValueError(f"require 0 <= k <= n, got k={k!r} n={n!r}")
     return a + k, b + (n - k)
 
 

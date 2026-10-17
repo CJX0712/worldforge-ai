@@ -15,8 +15,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from worldforge.eval.runner import run_agent, run_rag, run_retrieval  # noqa: E402
 from worldforge.eval.metrics import aggregate  # noqa: E402
+from worldforge.eval.runner import run_agent, run_rag, run_retrieval  # noqa: E402
 from worldforge.eval.scorecard import BASELINE_PATH  # noqa: E402
 from worldforge.pipeline import build_pipeline  # noqa: E402
 

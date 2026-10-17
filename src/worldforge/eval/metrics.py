@@ -6,7 +6,7 @@
 from __future__ import annotations
 
 import math
-from typing import Any, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 
 from worldforge.core.text import strip_citations
 from worldforge.core.tokenizer import tokenize

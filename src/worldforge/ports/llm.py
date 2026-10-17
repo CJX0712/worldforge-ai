@@ -5,7 +5,8 @@
 
 from __future__ import annotations
 
-from typing import Iterator, Protocol, Sequence, runtime_checkable
+from collections.abc import Iterator, Sequence
+from typing import Protocol, runtime_checkable
 
 from worldforge.types import Completion, Message
 

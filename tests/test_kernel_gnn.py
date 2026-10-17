@@ -157,9 +157,9 @@ def test_I10_sage_isolated_node():
     """I10 adj_list[v] == [] 时 AGG[v] == H[v]（1e-12）。"""
     H = [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]
     AGG = sage_mean_aggregate([[1], [], [0, 1]], H)
-    assert all(abs(a - b) < ATOL_STRICT for a, b in zip(AGG[1], H[1]))
+    assert all(abs(a - b) < ATOL_STRICT for a, b in zip(AGG[1], H[1], strict=False))
     # 非孤立点的对照分支：AGG[0] == mean(H[0], H[1]) == [2.0, 3.0]
-    assert all(abs(a - b) < ATOL_STRICT for a, b in zip(AGG[0], [2.0, 3.0]))
+    assert all(abs(a - b) < ATOL_STRICT for a, b in zip(AGG[0], [2.0, 3.0], strict=False))
 
 
 def test_I11_sage_mean_bounded():

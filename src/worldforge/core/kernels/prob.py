@@ -83,7 +83,7 @@ def cross_entropy(p, q) -> float:
     """
     p = normalize(p)
     q = normalize(q)
-    return -math.fsum(pi * safe_log(max(qi, EPS_SMALL)) for pi, qi in zip(p, q))
+    return -math.fsum(pi * safe_log(max(qi, EPS_SMALL)) for pi, qi in zip(p, q, strict=False))
 
 
 def kl_divergence(p, q) -> float:
@@ -94,7 +94,7 @@ def kl_divergence(p, q) -> float:
     p = normalize(p)
     q = normalize(q)
     return math.fsum(pi * (math.log(max(pi, EPS_SMALL)) - math.log(max(qi, EPS_SMALL)))
-                     for pi, qi in zip(p, q))
+                     for pi, qi in zip(p, q, strict=False))
 
 
 def js_divergence(p, q, base: float = math.e) -> float:
@@ -104,7 +104,7 @@ def js_divergence(p, q, base: float = math.e) -> float:
     """
     p = normalize(p)
     q = normalize(q)
-    m = [0.5 * (a + b) for a, b in zip(p, q)]
+    m = [0.5 * (a + b) for a, b in zip(p, q, strict=False)]
     v = 0.5 * kl_divergence(p, m) + 0.5 * kl_divergence(q, m)
     if base == math.e:
         return v
@@ -123,9 +123,9 @@ def wasserstein_1d(xp, wp, xq, wq) -> float:
     wq = normalize(wq)
     pm = {}
     qm = {}
-    for x, w in zip(xp, wp):
+    for x, w in zip(xp, wp, strict=False):
         pm[x] = pm.get(x, 0.0) + w
-    for x, w in zip(xq, wq):
+    for x, w in zip(xq, wq, strict=False):
         qm[x] = qm.get(x, 0.0) + w
     pts = sorted(set(pm) | set(qm))
     total = 0.0

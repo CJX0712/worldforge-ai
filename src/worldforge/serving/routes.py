@@ -7,7 +7,8 @@ from __future__ import annotations
 
 import time
 import uuid
-from typing import Any, Callable, Mapping
+from collections.abc import Callable, Mapping
+from typing import Any
 
 from worldforge.serving.errors import error_body
 from worldforge.serving.schemas import (
@@ -58,7 +59,7 @@ class Router:
             if len(pattern_parts) != len(parts):
                 continue
             params: dict[str, str] = {}
-            for expected, actual in zip(pattern_parts, parts):
+            for expected, actual in zip(pattern_parts, parts, strict=False):
                 if expected.startswith("{") and expected.endswith("}"):
                     params[expected[1:-1]] = actual
                 elif expected != actual:

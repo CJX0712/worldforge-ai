@@ -8,8 +8,8 @@ from __future__ import annotations
 import json
 import urllib.error
 import urllib.request
-from contextlib import contextmanager
-from typing import Any, Iterator, Mapping
+from collections.abc import Mapping
+from typing import Any
 
 from worldforge.adapters.observer_memory import MemoryObserver
 from worldforge.core.seeding import deterministic_view
